@@ -28,7 +28,15 @@
                 </div>
                 <p>
                   <a href="#" class="btn btn-black btn-outline-black rounded-0 d-block mb-2 mb-lg-0 d-lg-inline-block">View Details</a>
-                  <a href="#" class="btn btn-black rounded-0 d-block d-lg-inline-block">Add To Cart</a>
+                  {{-- <a href="#" class="btn btn-black rounded-0 d-block d-lg-inline-block">Add To Cart</a> --}}
+                    <form action="{{ route('cart.store') }}" method="POST">
+                            {{ csrf_field() }}
+                    <input type="hidden" name="id" value="{{$products->id}}">
+                    <input type="hidden" name="name" value="{{$products->name}}">
+                    <input type="hidden" name="price" value="{{$products->price}}">
+
+                        <button type="submit" class="btn btn-black rounded-0 d-block d-lg-inline-block">Add to Cart</button>
+                    </form>
                 </p>
               </div>
             </div>

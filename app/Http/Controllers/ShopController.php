@@ -29,7 +29,7 @@ class ShopController extends Controller
     public function show($slug)
     {
         $products = Product::where('slug',$slug)->firstOrFail();
-        $mightAlsoLike = Product::where('slug','!=',$slug)->take(3)->get();
+        $mightAlsoLike = Product::where('slug','!=',$slug)->mightAlsoLike()->get();
 
         return view('shop.product')->with([
             'products'=>$products,

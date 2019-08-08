@@ -18,6 +18,11 @@ Route::get('/','HomeController@index');
 Route::get('/product','ShopController@index')->name('shop.index');
 Route::get('/product/{product}','ShopController@show')->name('shop.product');
 
-Route::view('/cart','shop.cart')->name('shop.cart');
+Route::get('/cart','CartController@index')->name('shop.cart');
+Route::post('/cart','CartController@store')->name('cart.store');
+Route::delete('/cart/{product}','CartController@destroy')->name('cart.destroy');
+Route::get('empty',function(){
+    Cart::destroy();
+});
 Route::view('/checkout','shop.checkout');
 Route::view('/thankyou','shop.thankyou');

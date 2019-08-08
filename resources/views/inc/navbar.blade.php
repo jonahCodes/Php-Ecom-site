@@ -42,13 +42,22 @@
 
                 <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
                   <li><a href="/" class="nav-link">Home</a></li>
-                  <li><a href="/product" class="nav-link">Products</a></li>
+                  <li><a href="{{ route('shop.index') }}" class="nav-link">Products</a></li>
                   <li><a href="#about-section" class="nav-link">About Us</a></li>
                   <li><a href="#special-section" class="nav-link">Special</a></li>
                   <li><a href="#testimonials-section" class="nav-link">Testimonials</a></li>
                   <li><a href="#blog-section" class="nav-link">Blog</a></li>
                   <li><a href="#contact-section" class="nav-link">Contact</a></li>
-                  <li><a href="/cart" class="nav-link">Cart</a></li>
+                  <li>
+                      <a href="{{ route('shop.cart') }}" class="nav-link">Cart
+
+                            @if(Cart::instance('default')->count() > 0)
+                            <span class="badge badge-secondary">
+                            {{ Cart::instance('default')->count() }}
+                            </span>
+                            @endif
+                    </a>
+                    </li>
 
                 </ul>
               </nav>
