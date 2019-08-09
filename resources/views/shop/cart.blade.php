@@ -83,7 +83,7 @@
                                         <td class="hidden-xs text-center"><strong>Taxes(8%) ${{ Cart::tax()}}</strong></td>
                                         <td class="hidden-xs text"><strong>Total ${{Cart::total() }}</strong></td>
 
-                                        <td><a href="/checkout" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i></a></td>
+                                        <td><a href="{{route('shop.checkout')}}" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i></a></td>
                                     </tr>
                                 </tfoot>
                             </table>

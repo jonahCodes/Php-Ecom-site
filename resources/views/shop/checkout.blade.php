@@ -1,8 +1,74 @@
 @extends('layouts.app')
 
+
+@section('extra.js')
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<style>
+.StripeElement {
+    box-sizing: border-box;
+
+    height: 40px;
+
+    padding: 10px 12px;
+
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: white;
+
+    box-shadow: 0 1px 3px 0 #e6ebf1;
+    -webkit-transition: box-shadow 150ms ease;
+    transition: box-shadow 150ms ease;
+  }
+
+  .StripeElement--focus {
+    box-shadow: 0 1px 3px 0 #cfd7df;
+  }
+
+  .StripeElement--invalid {
+    border-color: #fa755a !important;
+  }
+
+  .StripeElement--webkit-autofill {
+    background-color: #fefde5 !important;
+  }
+
+  #card-errors{
+    color:  #fa755a;
+  }
+
+  .ORDER{
+    &:disabled{
+        background: lighten(#fefde5,10%);
+        cursor:not-allowed;
+    }
+  }
+</style>
+
+@endsection
+
 @section('content')
+<div class="container">
+        @if(session()->has('success_message'))
+            <div class="alert alert-success">
+                {{ session()->get('success_message') }}
+
+            </div>
+            @endif
+
+            @if(count($errors) > 0 )
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $errors }}</li>
+                    @endforeach
+                </ul>
+            </div>
 
 
+    </div>
+@endif
 <div class="site-section bg-light" id="contact-section">
         <div class="container">
           <div class="row mb-5">
@@ -14,88 +80,89 @@
           <div class="row justify-content-center">
                 <div class="col-lg panel panel-info">
                      <!--SHIPPING METHOD-->
+                    {{-- <form action="{{ route('shop.checkoutstore') }}" method="POST" id="payment-form">
+                        {{ csrf_field() }} --}}
                      <div class="panel panel-info">
                             <div class="panel-heading">Address</div>
                             <div class="panel-body">
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        <h4>Shipping Address</h4>
+                                        <h4>Fill information</h4>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-12"><strong>Country:</strong></div>
-                                    <div class="col-md-12">
-                                        <input type="text" class="form-control" name="country" value="" />
+                                        <div class="col-md-6 col-xs-12">
+                                            <strong>Email:</strong>
+                                            <input type="text" name="email" id="email"class="form-control" value="{{old('email')}}" required/>
+                                        </div>
+                                        <div class="span1"></div>
+
                                     </div>
-                                </div>
                                 <div class="form-group">
                                     <div class="col-md-6 col-xs-12">
-                                        <strong>First Name:</strong>
-                                        <input type="text" name="first_name" class="form-control" value="" />
+                                        <strong>Name on Card:</strong>
+                                        <input type="text" name="first_name" id="name_on_card"class="form-control" value="{{ old('name') }}" required/>
                                     </div>
                                     <div class="span1"></div>
-                                    <div class="col-md-6 col-xs-12">
-                                        <strong>Last Name:</strong>
-                                        <input type="text" name="last_name" class="form-control" value="" />
-                                    </div>
+
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12"><strong>Address:</strong></div>
                                     <div class="col-md-12">
-                                        <input type="text" name="address" class="form-control" value="" />
+                                        <input type="text" name="address_line1" id="address" class="form-control" value="{{ old('address') }}" required/>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-12"><strong>City:</strong></div>
-                                    <div class="col-md-12">
-                                        <input type="text" name="city" class="form-control" value="" />
-                                    </div>
-                                </div>
+
                                 <div class="form-group">
                                     <div class="col-md-12"><strong>State:</strong></div>
                                     <div class="col-md-12">
-                                        <input type="text" name="state" class="form-control" value="" />
+                                        <input type="text" name="state" id="province" class="form-control" value="{{ old('province') }}" required/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12"><strong>Zip / Postal Code:</strong></div>
                                     <div class="col-md-12">
-                                        <input type="text" name="zip_code" class="form-control" value="" />
+                                        <input type="text" name="zip_code" id="postalcode" class="form-control" value="{{ old('postalcode') }}" required/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-12"><strong>Phone Number:</strong></div>
-                                    <div class="col-md-12"><input type="text" name="phone_number" class="form-control" value="" /></div>
+                                    <div class="col-md-12"><strong>City</strong></div>
+                                    <div class="col-md-12"><input type="text" name="City" class="form-control" id="city"value="{{ old('city') }}" required/></div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-12"><strong>Email Address:</strong></div>
-                                    <div class="col-md-12"><input type="text" name="email_address" class="form-control" value="" /></div>
-                                </div>
+
                             </div>
                         </div>
                         <!--SHIPPING METHOD END-->
                         <div class="panel-heading"><span><i class="glyphicon glyphicon-lock"></i></span> Secure Payment</div>
                         <div class="panel-body">
+                            {{-- stripe --}}
+                            <form action="{{ route('shop.checkoutstore') }}" method="POST" id="payment-form">
+                                    {{ csrf_field() }}
                             <div class="form-group">
-                                <div class="col-md-12"><strong>Card Type:</strong></div>
-                                <div class="col-md-12">
-                                    <select id="CreditCardType" name="CreditCardType" class="form-control">
-                                        <option value="5">Visa</option>
-                                        <option value="6">MasterCard</option>
-                                        <option value="7">American Express</option>
-                                        <option value="8">Discover</option>
-                                    </select>
-                                </div>
+
+
+                                          <label for="card-element">
+                                            Credit or debit card
+                                          </label>
+                                          <div id="card-element">
+                                            <!-- A Stripe Element will be inserted here. -->
+                                          </div>
+
+                                          <!-- Used to display form errors. -->
+                                          <div id="card-errors" role="alert"></div>
+
+
+
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-12"><strong>Credit Card Number:</strong></div>
-                                <div class="col-md-12"><input type="text" class="form-control" name="car_number" value="" /></div>
-                            </div>
-                            <div class="form-group">
+                            <button type="submit" id="complete-order" class="btn btn-primary ORDER btn-submit-fix">Complete Order</button>
+                        </form>
+                            {{-- end stripe form  --}}
+
+                            {{-- <div class="form-group">
                                 <div class="col-md-12"><strong>Card CVV:</strong></div>
                                 <div class="col-md-12"><input type="text" class="form-control" name="car_code" value="" /></div>
-                            </div>
-                            <div class="form-group">
+                            </div> --}}
+                            {{-- <div class="form-group">
                                 <div class="col-md-12">
                                     <strong>Expiration Date</strong>
                                 </div>
@@ -132,7 +199,7 @@
                                         <option value="2025">2025</option>
                                 </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <span>Pay secure using your credit card.</span>
@@ -147,12 +214,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    {{-- <button type="submit" class="btn btn-primary btn-submit-fix">Place Order</button> --}}
-                                    <a  class="btn btn-primary btn-submit-fix" href="/thankyou">Place Order</a>
-                                </div>
+
                             </div>
                         </div>
+                    {{-- </form> --}}
                     </div>
                     <div class="col-sm">
                         <h1>Orders</h1>
@@ -161,62 +226,40 @@
                                     Review Order <div class="pull-right"><small><a class="afix-1" href="{{route('shop.cart')}}">Edit Cart</a></small></div>
                                 </div>
                                 <div class="panel-body">
-                                    <div class="form-group">
+                                    @foreach (Cart::content() as $item)
+                                        <div class="form-group">
                                         <div class="col-sm-3 col-xs-3">
-                                            <img class="img-responsive" src="//c1.staticflickr.com/1/466/19681864394_c332ae87df_t.jpg" />
+                                            <img class="img-responsive" src="{{asset('images/'.$item->model->slug.'.jpg') }}" alt="item" />
                                         </div>
                                         <div class="col-sm-6 col-xs-6">
-                                            <div class="col-xs-12">Product name</div>
-                                            <div class="col-xs-12"><small>Quantity:<span>1</span></small></div>
+                                            <div class="col-xs-12">{{ $item->model->name }}</div>
+                                            <p class="col-xs-12">QTY:{{$item->qty}}</p>
+                                            <p class="col-xs-12"> Details:{{$item->model->details}}</p>
                                         </div>
                                         <div class="col-sm-3 col-xs-3 text-right">
-                                            <h6><span>$</span>25.00</h6>
+                                            <h6>Price: <span>$</span>{{$item->model->price}}</h6>
                                         </div>
                                     </div>
-                                    <div class="form-group"><hr /></div>
-                                    <div class="form-group">
-                                        <div class="col-sm-3 col-xs-3">
-                                            <img class="img-responsive" src="//c1.staticflickr.com/1/466/19681864394_c332ae87df_t.jpg" />
-                                        </div>
-                                        <div class="col-sm-6 col-xs-6">
-                                            <div class="col-xs-12">Product name</div>
-                                            <div class="col-xs-12"><small>Quantity:<span>1</span></small></div>
-                                        </div>
-                                        <div class="col-sm-3 col-xs-3 text-right">
-                                            <h6><span>$</span>25.00</h6>
-                                        </div>
-                                    </div>
-                                    <div class="form-group"><hr /></div>
-                                    <div class="form-group">
-                                        <div class="col-sm-3 col-xs-3">
-                                            <img class="img-responsive" src="//c1.staticflickr.com/1/466/19681864394_c332ae87df_t.jpg" />
-                                        </div>
-                                        <div class="col-sm-6 col-xs-6">
-                                            <div class="col-xs-12">Product name</div>
-                                            <div class="col-xs-12"><small>Quantity:<span>2</span></small></div>
-                                        </div>
-                                        <div class="col-sm-3 col-xs-3 text-right">
-                                            <h6><span>$</span>50.00</h6>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                     <div class="form-group"><hr /></div>
                                     <div class="form-group">
                                         <div class="col-xs-12">
                                             <strong>Subtotal</strong>
-                                            <div class="pull-right"><span>$</span><span>200.00</span></div>
+                                            <div class="pull-right"><span>$</span><span>{{ Cart::subtotal() }}</span></div>
                                         </div>
                                         <div class="col-xs-12">
-                                            <small>Shipping</small>
-                                            <div class="pull-right"><span>-</span></div>
+                                            <small>taxes</small>
+                                            <div class="pull-right"><span>{{ Cart::tax() }}</span></div>
                                         </div>
                                     </div>
                                     <div class="form-group"><hr /></div>
                                     <div class="form-group">
                                         <div class="col-xs-12">
                                             <strong>Order Total</strong>
-                                            <div class="pull-right"><span>$</span><span>150.00</span></div>
+                                            <div class="pull-right"><span>$</span><span>{{ Cart::total() }}</span></div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                     </div>
@@ -227,5 +270,93 @@
         </div>
       </div>
 
+
+@endsection
+
+@section('extrascript')
+<script>(function(){
+    // Create a Stripe client.
+var stripe = Stripe('pk_test_TTcASRZEpImF99wYUZFCpDcV00FVrtU2vZ');
+
+// Create an instance of Elements.
+var elements = stripe.elements();
+
+// Custom styling can be passed to options when creating an Element.
+// (Note that this demo uses a wider set of styles than the guide below.)
+var style = {
+  base: {
+    color: '#32325d',
+    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+    fontSmoothing: 'antialiased',
+    fontSize: '16px',
+    '::placeholder': {
+      color: '#aab7c4'
+    }
+  },
+  invalid: {
+    color: '#fa755a',
+    iconColor: '#fa755a'
+  }
+};
+
+// Create an instance of the card Element.
+var card = elements.create('card', {style: style,hidePostalCode:true});
+
+// Add an instance of the card Element into the `card-element` <div>.
+card.mount('#card-element');
+
+// Handle real-time validation errors from the card Element.
+card.addEventListener('change', function(event) {
+  var displayError = document.getElementById('card-errors');
+  if (event.error) {
+    displayError.textContent = event.error.message;
+  } else {
+    displayError.textContent = '';
+  }
+});
+
+// Handle form submission.
+var form = document.getElementById('payment-form');
+form.addEventListener('submit', function(event) {
+  event.preventDefault();
+
+document.getElementById('complete-order').disabled=true;
+  var options={
+      name:document.getElementById('name_on_card').value,
+      address_line1:document.getElementById('address').value,
+      address_city:document.getElementById('city').value,
+      address_state:document.getElementById('province').value,
+      address_zip:document.getElementById('postalcode').value
+  }
+
+  stripe.createToken(card, options).then(function(result) {
+    if (result.error) {
+      // Inform the user if there was an error.
+      var errorElement = document.getElementById('card-errors');
+      errorElement.textContent = result.error.message;
+
+      document.getElementById('complete-order').disabled=false;
+    } else {
+      // Send the token to your server.
+      stripeTokenHandler(result.token);
+    }
+  });
+});
+
+// Submit the form with the token ID.
+function stripeTokenHandler(token) {
+  // Insert the token ID into the form so it gets submitted to the server
+  var form = document.getElementById('payment-form');
+  var hiddenInput = document.createElement('input');
+  hiddenInput.setAttribute('type', 'hidden');
+  hiddenInput.setAttribute('name', 'stripeToken');
+  hiddenInput.setAttribute('value', token.id);
+  form.appendChild(hiddenInput);
+
+  // Submit the form
+  form.submit();
+}
+})();
+</script>
 
 @endsection

@@ -25,6 +25,7 @@
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        @yield('extra.js')
         </head>
 <body>
     <div id="app">
@@ -36,6 +37,7 @@
     </div>
 
     {{-- jquery --}}
+    @yield('extrascript')
     <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
     <script src="{{asset('js/jquery-migrate-3.0.1.min.js')}}"></script>
     <script src="{{asset('js/jquery-ui.js')}}"></script>

@@ -42,7 +42,7 @@
 
                 <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
                   <li><a href="/" class="nav-link">Home</a></li>
-                  <li><a href="{{ route('shop.index') }}" class="nav-link">Products</a></li>
+                  <li><a href="{{ route('shop.index') }}" class="">Products</a></li>
                   <li><a href="#about-section" class="nav-link">About Us</a></li>
                   <li><a href="#special-section" class="nav-link">Special</a></li>
                   <li><a href="#testimonials-section" class="nav-link">Testimonials</a></li>

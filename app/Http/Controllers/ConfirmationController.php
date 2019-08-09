@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Gloudemans\Shoppingcart\Facades\Cart;
-use App\Product;
-class CartController extends Controller
+
+class ConfirmationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +13,11 @@ class CartController extends Controller
      */
     public function index()
     {
-        $mightAlsoLike = Product::mightAlsoLike()->get();
+        if(! session()->has('success_message')){
+            return redirect('/');
+        }
 
-        return view('shop.cart')->with(['mightAlsoLike'=>$mightAlsoLike]);
+        return view('shop.thankyou');
     }
 
     /**
@@ -35,23 +36,10 @@ class CartController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $product)
+    public function store(Request $request)
     {
-        $duplicates = Cart::search(function($cartItem, $rowId) use ($product){
-            return $cartItem->id === $product->id;
-
-        });
-
-        if($duplicates->isNotEmpty()){
-
-            return redirect()->route('shop.cart')->with('success_message','Item is already in your Cart!');
-        }
-
-        Cart::add($product->id, $product->name, 1, $product->price)
-            ->associate('App\Product');
-            return redirect()->route('shop.cart')->with('success_message','Item was added to your cart!');
+        //
     }
-
 
     /**
      * Display the specified resource.
@@ -95,8 +83,6 @@ class CartController extends Controller
      */
     public function destroy($id)
     {
-        Cart::remove($id);
-        return back()->with('success_message','Item has been removed');
-
+        //
     }
 }

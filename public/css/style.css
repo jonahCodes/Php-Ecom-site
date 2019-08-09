@@ -1,4 +1,9 @@
 /* Base */
+/**
+ * The CSS shown here will not be introduced in the Quickstart guide, but shows
+ * how you can use CSS to style your Element's container.
+ */
+
 body {
   line-height: 1.7;
   color: gray;
@@ -1490,7 +1495,7 @@ h1, h2, h3, h4, h5,
 
 .social-media {
   display: inline-block;
-  float: left;
+  float: left !important;
   margin-bottom: 0px;
   padding: 0; }
   .social-media li {

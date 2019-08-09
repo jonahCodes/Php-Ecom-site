@@ -24,5 +24,7 @@ Route::delete('/cart/{product}','CartController@destroy')->name('cart.destroy');
 Route::get('empty',function(){
     Cart::destroy();
 });
-Route::view('/checkout','shop.checkout');
-Route::view('/thankyou','shop.thankyou');
+Route::get('/checkout','CheckoutController@index')->name('shop.checkout');
+Route::post('/checkout','CheckoutController@store')->name('shop.checkoutstore');
+
+Route::get('/thankyou','ConfirmationController@index')->name('shop.thankyou');
