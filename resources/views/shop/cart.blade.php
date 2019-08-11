@@ -57,9 +57,16 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td data-th="Price">${{$item->model->price}}</td>
+                                        <td data-th="Price">${{$item->subtotal}}</td>
                                         <td data-th="Quantity">
-                                            <input type="number" class="form-control text-center" value="1">
+                                            {{-- <input type="number" class="form-control text-center" value="1"> --}}
+                                            <div>
+                                                <select class="quantity" data-id="{{ $item->rowId }}" data-productQuantity="{{ $item->model->quantity }}">
+                                                    @for ($i = 1; $i < 5 + 1 ; $i++)
+                                                        <option {{ $item->qty == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
                                         </td>
                                         <td class="actions" data-th="">
                                         <form action="{{ route('cart.destroy',$item->rowId) }}" method="POST">
@@ -77,7 +84,7 @@
                                         <td class="text-center"><strong>Update further info</strong></td>
                                     </tr>
                                     <tr>
-                                        <td><a href="/shop" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
+                                        <td><a href="{{route('shop.index')}}" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
                                         <td colspan="2" class="hidden-xs"></td>
                                         <td class="hidden-xs text-center"><strong>SubTotal ${{ Cart::subtotal()}}</strong></td>
                                         <td class="hidden-xs text-center"><strong>Taxes(8%) ${{ Cart::tax()}}</strong></td>
@@ -94,4 +101,30 @@
 
             @endif
 @include('inc.mightAlsoLike')
+@endsection
+
+@section('extrascript')
+<script src="{{ asset('js/app.js') }}"></script>
+<script>
+(function(){
+    const classname = document.querySelectorAll('.quantity')
+
+    Array.from(classname).forEach(function(element){
+        element.addEventListener('change',function(){
+            const id = element.getAttribute('data-id')
+            axios.patch(`/cart/${id}`,{
+                quantity: this.value
+            })
+            .then(function(response){
+                // console.log(response);
+                window.location.href='{{ route('shop.cart') }}'
+            })
+            .catch(function(error){
+                console.log(error);
+                window.location.href='{{ route('shop.cart') }}'
+        });
+    })
+  })
+})();
+</script>
 @endsection

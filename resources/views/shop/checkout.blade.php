@@ -49,7 +49,7 @@
 @endsection
 
 @section('content')
-<div class="container">
+
         @if(session()->has('success_message'))
             <div class="alert alert-success">
                 {{ session()->get('success_message') }}
@@ -61,13 +61,13 @@
             <div class="alert alert-danger">
                 <ul>
                     @foreach ($errors->all() as $error)
-                        <li>{{ $errors }}</li>
+                        <li>{!! $error !!}</li>
                     @endforeach
                 </ul>
             </div>
 
 
-    </div>
+
 @endif
 <div class="site-section bg-light" id="contact-section">
         <div class="container">
@@ -82,62 +82,63 @@
                      <!--SHIPPING METHOD-->
                     {{-- <form action="{{ route('shop.checkoutstore') }}" method="POST" id="payment-form">
                         {{ csrf_field() }} --}}
-                     <div class="panel panel-info">
-                            <div class="panel-heading">Address</div>
-                            <div class="panel-body">
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <h4>Fill information</h4>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                        <div class="col-md-6 col-xs-12">
-                                            <strong>Email:</strong>
-                                            <input type="text" name="email" id="email"class="form-control" value="{{old('email')}}" required/>
-                                        </div>
-                                        <div class="span1"></div>
 
-                                    </div>
-                                <div class="form-group">
-                                    <div class="col-md-6 col-xs-12">
-                                        <strong>Name on Card:</strong>
-                                        <input type="text" name="first_name" id="name_on_card"class="form-control" value="{{ old('name') }}" required/>
-                                    </div>
-                                    <div class="span1"></div>
-
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-12"><strong>Address:</strong></div>
-                                    <div class="col-md-12">
-                                        <input type="text" name="address_line1" id="address" class="form-control" value="{{ old('address') }}" required/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-md-12"><strong>State:</strong></div>
-                                    <div class="col-md-12">
-                                        <input type="text" name="state" id="province" class="form-control" value="{{ old('province') }}" required/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-12"><strong>Zip / Postal Code:</strong></div>
-                                    <div class="col-md-12">
-                                        <input type="text" name="zip_code" id="postalcode" class="form-control" value="{{ old('postalcode') }}" required/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-12"><strong>City</strong></div>
-                                    <div class="col-md-12"><input type="text" name="City" class="form-control" id="city"value="{{ old('city') }}" required/></div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <!--SHIPPING METHOD END-->
-                        <div class="panel-heading"><span><i class="glyphicon glyphicon-lock"></i></span> Secure Payment</div>
                         <div class="panel-body">
                             {{-- stripe --}}
                             <form action="{{ route('shop.checkoutstore') }}" method="POST" id="payment-form">
                                     {{ csrf_field() }}
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">Address</div>
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <h4>Fill information</h4>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                    <div class="col-md-6 col-xs-12">
+                                                        <strong>Email:</strong>
+                                                        <input type="text" name="email" id="email"class="form-control" value="" />
+                                                    </div>
+                                                    <div class="span1"></div>
+
+                                                </div>
+                                            <div class="form-group">
+                                                <div class="col-md-6 col-xs-12">
+                                                    <strong>Name on Card:</strong>
+                                                    <input type="text" name="name" id="name_on_card" class="form-control" value="" />
+                                                </div>
+                                                <div class="span1"></div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12"><strong>Address:</strong></div>
+                                                <div class="col-md-12">
+                                                    <input type="text" name="address" id="address" class="form-control" value="" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="col-md-12"><strong>State:</strong></div>
+                                                <div class="col-md-12">
+                                                    <input type="text" name="province" id="province" class="form-control" value="" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12"><strong>Zip / Postal Code:</strong></div>
+                                                <div class="col-md-12">
+                                                    <input type="text" name="postalcode" id="postalcode" class="form-control" value="" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12"><strong>City</strong></div>
+                                                <div class="col-md-12"><input type="text" name="city" class="form-control" id="city"value="" /></div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!--SHIPPING METHOD END-->
+                                    <div class="panel-heading"><span><i class="glyphicon glyphicon-lock"></i></span> Secure Payment</div>
                             <div class="form-group">
 
 
@@ -237,7 +238,7 @@
                                             <p class="col-xs-12"> Details:{{$item->model->details}}</p>
                                         </div>
                                         <div class="col-sm-3 col-xs-3 text-right">
-                                            <h6>Price: <span>$</span>{{$item->model->price}}</h6>
+                                            <h6>Price: <span>$</span>{{$item->subtotal}}</h6>
                                         </div>
                                     </div>
                                     @endforeach
